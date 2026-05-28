@@ -109,7 +109,7 @@
   </div>
 </div>
 
-<!-- AD SLOT UTAMA (SUDAH TERPASANG IKLAN ADSTERRA) -->
+<!-- AD SLOT UTAMA -->
 <div class="ad-wrap">
   <div class="ad-slot">
     <div class="ad-badge">📢 IKLAN</div>
@@ -182,7 +182,7 @@
   const fill = document.getElementById('progressFill');
   const pctLabel = document.getElementById('pctLabel');
 
-  // Mulai animasi loading bar berjalan perlahan selama 5 detik
+  // Animasi Loading Bar berjalan lambat selama 5 detik
   setTimeout(() => { fill.style.width = '100%'; }, 50);
 
   const timer = setInterval(() => {
@@ -196,14 +196,16 @@
     if (seconds <= 0) {
       clearInterval(timer);
       pillEl.style.display = 'none'; // Sembunyikan timer angka
-      btnSkip.classList.add('visible'); // Tampilkan tombol SKIP wajib klik
+      btnSkip.classList.add('visible'); // TANYA PENGUNJUNG: Munculkan tombol SKIP wajib klik manual
     }
   }, 1000);
 
-  // Fungsi saat tombol klik ditekan manual
+  // FUNGSI UTAMA: Hanya berjalan jika tombol benar-benar DIKLIK MANUAL oleh pengunjung
   function doRedirect() {
     document.getElementById('overlay').classList.add('show');
-    setTimeout(() => { window.location.href = destination; }, 500);
+    setTimeout(() => { 
+      window.location.href = destination; 
+    }, 500);
   }
 </script>
 </body>
