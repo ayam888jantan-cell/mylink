@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ LOADING...</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --yellow: #FFE600; --green: #00E87A; --pink: #FF3CAC;
+    --blue: #00C2FF; --orange: #FF6B00; --dark: #0a0a0a; --white: #ffffff;
+  }
+  body {
+    background: var(--yellow); font-family: 'Nunito', sans-serif;
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; position: relative;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; background-size: 18px 18px;
+    background-image: radial-gradient(circle, #0002 1px, transparent 1px); pointer-events: none; z-index: 0;
+  }
+  .topbar {
+    width: 100%; background: var(--dark); border-bottom: 4px solid var(--pink);
+    padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
+  }
+  .brand { font-family: 'Bangers', cursive; font-size: 26px; letter-spacing: 3px; color: var(--yellow); text-shadow: 3px 3px 0 var(--orange); }
+  .brand span { color: var(--green); text-shadow: 3px 3px 0 #008a48; }
+  .skip-area { display: flex; align-items: center; gap: 10px; }
+  .countdown-pill { background: var(--pink); border-radius: 99px; padding: 6px 14px; font-size: 13px; font-weight: 900; color: var(--white); border: 3px solid var(--dark); box-shadow: 3px 3px 0 var(--dark); letter-spacing: 1px; }
+  .btn-skip {
+    display: none; align-items: center; gap: 6px; padding: 8px 20px; background: var(--green); border: 3px solid var(--dark);
+    border-radius: 99px; color: var(--dark); font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 900; cursor: pointer; text-decoration: none; box-shadow: 4px 4px 0 var(--dark); transition: transform 0.1s, box-shadow 0.1s; letter-spacing: 1px;
+  }
+  .btn-skip:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--dark); }
+  .btn-skip.visible { display: flex; }
+  .hero { position: relative; z-index: 1; text-align: center; padding: 30px 20px 16px; }
+  .hero-badge {
+    display: inline-block; background: var(--pink); color: var(--white); font-family: 'Bangers', cursive; font-size: 14px; letter-spacing: 3px;
+    padding: 4px 16px; border-radius: 99px; border: 3px solid var(--dark); box-shadow: 3px 3px 0 var(--dark); margin-bottom: 14px; animation: wiggle 2s ease-in-out infinite;
+  }
+  @keyframes wiggle { 0%,100%{transform:rotate(-2deg)} 50%{transform:rotate(2deg)} }
+  .hero h1 { font-family: 'Bangers', cursive; font-size: clamp(44px, 12vw, 72px); color: var(--dark); line-height: 0.95; letter-spacing: 4px; -webkit-text-stroke: 2px var(--dark); paint-order: stroke fill; margin-bottom: 10px; }
+  .hero h1 .line1 { color: var(--white); -webkit-text-stroke: 3px var(--dark); display: block; }
+  .hero h1 .line2 { color: var(--pink); -webkit-text-stroke: 3px var(--dark); display: block; font-size: clamp(28px, 8vw, 52px); }
+  .hero-sub { display: inline-block; background: var(--dark); color: var(--yellow); font-size: 13px; font-weight: 800; padding: 6px 18px; border-radius: 8px; margin-top: 10px; letter-spacing: 1px; }
+  .stat-bar { position: relative; z-index: 1; width: 100%; max-width: 680px; padding: 0 16px; margin: 16px auto 0; }
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat-card { background: var(--white); border: 3px solid var(--dark); border-radius: 14px; box-shadow: 4px 4px 0 var(--dark); padding: 12px 10px; text-align: center; }
+  .stat-card .num { font-family: 'Bangers', cursive; font-size: 28px; letter-spacing: 2px; display: block; line-height: 1; margin-bottom: 2px; }
+  .stat-card .lbl { font-size: 10px; font-weight: 800; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+  .stat-card:nth-child(1) .num { color: var(--pink); }
+  .stat-card:nth-child(2) .num { color: var(--blue); }
+  .stat-card:nth-child(3) .num { color: var(--green); }
+  .ad-wrap { position: relative; z-index: 1; width: 100%; max-width: 680px; padding: 0 16px; margin: 16px auto 0; }
+  .ad-slot { width: 100%; min-height: 250px; background: var(--white); border-radius: 20px; border: 4px solid var(--dark); box-shadow: 6px 6px 0 var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; position: relative; overflow: hidden; }
+  .ad-slot::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: repeating-linear-gradient(90deg, var(--pink) 0, var(--pink) 20px, var(--yellow) 20px, var(--yellow) 40px, var(--green) 40px, var(--green) 60px, var(--blue) 60px, var(--blue) 80px);
+  }
+  .ad-badge { position: absolute; top: 14px; left: 14px; background: var(--yellow); border: 2px solid var(--dark); border-radius: 6px; padding: 2px 10px; font-size: 10px; font-weight: 900; color: var(--dark); letter-spacing: 2px; text-transform: uppercase; box-shadow: 2px 2px 0 var(--dark); }
+  .ad-icon { font-size: 36px; opacity: 0.2; }
+  .ad-slot > span { font-size: 13px; color: #aaa; font-weight: 700; letter-spacing: 1px; }
+  .dest-wrap { position: relative; z-index: 1; width: 100%; max-width: 680px; padding: 0 16px; margin: 14px auto 0; }
+  .dest-card { background: var(--blue); border: 3px solid var(--dark); border-radius: 16px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; box-shadow: 5px 5px 0 var(--dark); }
+  .dest-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--dark); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; border: 2px solid var(--dark); }
+  .dest-text h3 { font-size: 11px; font-weight: 900; color: var(--dark); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 2px; }
+  .dest-text p { font-size: 13px; font-weight: 800; color: var(--white); word-break: break-all; }
+  .progress-wrap { position: relative; z-index: 1; width: 100%; max-width: 680px; padding: 0 16px; margin: 14px auto 0; }
+  .progress-top { display: flex; justify-content: space-between; font-size: 12px; font-weight: 900; color: var(--dark); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .progress-bar { width: 100%; height: 16px; background: var(--white); border-radius: 99px; border: 3px solid var(--dark); overflow: hidden; box-shadow: 3px 3px 0 var(--dark); }
+  .progress-fill {
+    height: 100%; background: repeating-linear-gradient(45deg, var(--pink) 0, var(--pink) 10px, var(--orange) 10px, var(--orange) 20px); border-radius: 99px; width: 0%; transition: width 1s linear; background-size: 28px 28px; animation: stripe 0.5s linear infinite;
+  }
+  @keyframes stripe { from { background-position: 0 0; } to { background-position: 28px 0; } }
+  .features-wrap { position: relative; z-index: 1; width: 100%; max-width: 680px; padding: 0 16px; margin: 14px auto 0; }
+  .features-title { font-family: 'Bangers', cursive; font-size: 20px; letter-spacing: 2px; color: var(--dark); margin-bottom: 10px; text-align: center; }
+  .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .feat-card { background: var(--white); border: 3px solid var(--dark); border-radius: 14px; padding: 14px 12px; box-shadow: 4px 4px 0 var(--dark); display: flex; align-items: flex-start; gap: 10px; transition: transform 0.1s, box-shadow 0.1s; cursor: default; }
+  .feat-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--dark); }
+  .feat-card:nth-child(1) { background: #FFE600; }
+  .feat-card:nth-child(2) { background: #FF3CAC; color: white; }
+  .feat-card:nth-child(3) { background: #00C2FF; }
+  .feat-card:nth-child(4) { background: #00E87A; }
+  .feat-icon { font-size: 22px; flex-shrink: 0; }
+  .feat-text strong { display: block; font-size: 13px; font-weight: 900; margin-bottom: 2px; color: var(--dark); }
+  .feat-card:nth-child(2) .feat-text strong { color: var(--white); }
+  .feat-text span { font-size: 11px; font-weight: 700; color: #333; line-height: 1.4; }
+  .feat-card:nth-child(2) .feat-text span { color: rgba(255,255,255,0.85); }
+  .ad-wrap-2 { position: relative; z-index: 1; width: 100%; max-width: 680px; padding: 0 16px; margin: 14px auto 24px; }
+  .ad-slot-sm { width: 100%; min-height: 80px; background: var(--white); border-radius: 14px; border: 3px solid var(--dark); box-shadow: 4px 4px 0 var(--dark); display: flex; align-items: center; justify-content: center; position: relative; }
+  .ad-slot-sm span { font-size: 12px; color: #aaa; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+  .footer { position: relative; z-index: 1; text-align: center; padding: 16px; font-size: 12px; font-weight: 800; color: var(--dark); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .overlay { display: none; position: fixed; inset: 0; background: var(--dark); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+  .overlay.show { display: flex; }
+  .overlay-text { font-family: 'Bangers', cursive; font-size: 42px; letter-spacing: 4px; color: var(--yellow); text-shadow: 4px 4px 0 var(--orange); animation: blink 0.4s ease-in-out infinite alternate; }
+  @keyframes blink { from{opacity:1} to{opacity:0.3} }
+  .overlay-sub { font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
+  @media(max-width:480px){ .features-grid { grid-template-columns: 1fr 1fr; } .dest-card { flex-direction: column; align-items: flex-start; } .stat-row { grid-template-columns: repeat(3,1fr); } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">MY<span>LINK</span></div>
+  <div class="skip-area">
+    <div class="countdown-pill" id="countdownPill">⏳ <b id="countNum">5</b>s</div>
+    <a class="btn-skip" id="btnSkip" href="#" onclick="doRedirect(); return false;">SKIP ⚡</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">✦ HALAMAN JEMBATAN ✦</div>
+  <h1>
+    <span class="line1">TUNGGU</span>
+    <span class="line2">BENTAR YA~</span>
+  </h1>
+  <div class="hero-sub">⚡ Kamu akan diarahkan otomatis ⚡</div>
+</div>
+
+<div class="stat-bar">
+  <div class="stat-row">
+    <div class="stat-card">
+      <span class="num" id="visitorCount">0</span>
+      <span class="lbl">👀 Visitor</span>
+    </div>
+    <div class="stat-card"><span class="num">100%</span><span class="lbl">🔒 Aman</span></div>
+    <div class="stat-card"><span class="num">FREE</span><span class="lbl">💸 Gratis</span></div>
+  </div>
+</div>
+
+<div class="ad-wrap">
+  <div class="ad-slot">
+    <div class="ad-badge">📢 IKLAN</div>
+    <div class="ad-icon">💰</div>
+    
+    <span>[ PASTE SCRIPT ADSTERRA DI SINI ]</span>
+    
+  </div>
+</div>
+
+<div class="dest-wrap">
+  <div class="dest-card">
+    <div class="dest-icon">🔗</div>
+    <div class="dest-text">
+      <h3>📍 Tujuan kamu</h3>
+      <p id="destUrl">Memuat...</p>
+    </div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-top"><span>⚡ Loading...</span><span id="pctLabel">0%</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<div class="features-wrap">
+  <div class="features-title">✦ KENAPA PAKE MYLINK? ✦</div>
+  <div class="features-grid">
+    <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-text"><strong>Super Cepat</strong><span>Redirect instan, no ribet no lag</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🔒</div><div class="feat-text"><strong>100% Aman</strong><span>No virus, no scam, no tipu-tipu</span></div></div>
+    <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-text"><strong>Bisa Tracking</strong><span>Lihat siapa aja yang scan QR-mu</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🎨</div><div class="feat-text"><strong>Custom QR</strong><span>Warna bebas, ukuran bebas, aesthetic!</span></div></div>
+  </div>
+</div>
+
+<div class="ad-wrap-2">
+  <div class="ad-slot-sm">
+    <div class="ad-badge" style="position:absolute;top:8px;left:10px;font-size:9px;background:var(--yellow);border:2px solid var(--dark);border-radius:4px;padding:2px 8px;font-weight:900;box-shadow:2px 2px 0 var(--dark);">📢 IKLAN</div>
+    
+    <span>[ SLOT IKLAN KEDUA — OPSIONAL ]</span>
+    
+  </div>
+</div>
+
+<div class="footer">⚡ Iklan ini mendukung konten gratis · No data tersimpan · 100% lokal ⚡</div>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-text">LOADING...</div>
+  <div class="overlay-sub">Membawa kamu ke tujuan ⚡</div>
+</div>
+
+<script>
+  const SKIP_DELAY = 5;
+
+  const base = 1247;
+  const rand = Math.floor(Math.random() * 300);
+  let count = base + rand;
+  document.getElementById('visitorCount').textContent = count.toLocaleString('id-ID');
+  setInterval(() => {
+    if (Math.random() > 0.7) {
+      count++;
+      document.getElementById('visitorCount').textContent = count.toLocaleString('id-ID');
+    }
+  }, 3000);
+
+  // Menangkap parameter URL (?to=URL_TUJUAN)
+  const params = new URLSearchParams(window.location.search);
+  let destination = params.get('to') || 'https://google.com';
+  try { new URL(destination); } catch(e) { destination = 'https://google.com'; }
+
+  document.getElementById('destUrl').textContent = destination;
+  document.getElementById('btnSkip').href = destination;
+
+  let seconds = SKIP_DELAY;
+  const countEl = document.getElementById('countNum');
+  const pillEl = document.getElementById('countdownPill');
+  const btnSkip = document.getElementById('btnSkip');
+  const fill = document.getElementById('progressFill');
+  const pctLabel = document.getElementById('pctLabel');
+
+  setTimeout(() => { fill.style.width = '100%'; }, 100);
+
+  const timer = setInterval(() => {
+    seconds--;
+    countEl.textContent = seconds;
+    const pct = Math.round(((SKIP_DELAY - seconds) / SKIP_DELAY) * 100);
+    pctLabel.textContent = pct + '%';
+    if (seconds <= 0) {
+      clearInterval(timer);
+      pillEl.style.display = 'none';
+      btnSkip.classList.add('visible');
+      // LANGSUNG REDIRECT OTOMATIS SAAT WAKTU HABIS
+      doRedirect();
+    }
+  }, 1000);
+
+  function doRedirect() {
+    document.getElementById('overlay').classList.add('show');
+    setTimeout(() => { window.location.href = destination; }, 800);
+  }
+</script>
+</body>
+</html>
