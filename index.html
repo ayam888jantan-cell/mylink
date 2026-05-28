@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ QR GENERATOR</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --yellow: #FFE600; --green: #00E87A; --pink: #FF3CAC;
+    --blue: #00C2FF; --orange: #FF6B00; --dark: #0a0a0a; --white: #ffffff;
+  }
+  body {
+    background: var(--yellow); font-family: 'Nunito', sans-serif;
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; position: relative;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; background-size: 18px 18px;
+    background-image: radial-gradient(circle, #0002 1px, transparent 1px); pointer-events: none; z-index: 0;
+  }
+  .topbar {
+    width: 100%; background: var(--dark); border-bottom: 4px solid var(--green);
+    padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
+  }
+  .brand { font-family: 'Bangers', cursive; font-size: 26px; letter-spacing: 3px; color: var(--yellow); text-shadow: 3px 3px 0 var(--orange); }
+  .brand span { color: var(--green); text-shadow: 3px 3px 0 #008a48; }
+  .nav-link {
+    font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 900; color: var(--white); text-decoration: none;
+    background: var(--pink); border: 3px solid var(--white); border-radius: 99px; padding: 6px 16px;
+    box-shadow: 3px 3px 0 rgba(255,255,255,0.3); letter-spacing: 1px; transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .nav-link:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 rgba(255,255,255,0.3); }
+  .hero { position: relative; z-index: 1; text-align: center; padding: 28px 20px 16px; }
+  .hero-badge {
+    display: inline-block; background: var(--pink); color: var(--white); font-family: 'Bangers', cursive; font-size: 14px; letter-spacing: 3px;
+    padding: 4px 16px; border-radius: 99px; border: 3px solid var(--dark); box-shadow: 3px 3px 0 var(--dark); margin-bottom: 12px; animation: wiggle 2s ease-in-out infinite;
+  }
+  @keyframes wiggle { 0%,100%{transform:rotate(-2deg)} 50%{transform:rotate(2deg)} }
+  .hero h1 { font-family: 'Bangers', cursive; font-size: clamp(40px, 11vw, 64px); line-height: 0.95; letter-spacing: 4px; margin-bottom: 8px; }
+  .hero h1 .l1 { color: var(--white); -webkit-text-stroke: 3px var(--dark); display: block; }
+  .hero h1 .l2 { color: var(--blue); -webkit-text-stroke: 3px var(--dark); display: block; font-size: clamp(26px, 7vw, 48px); }
+  .hero-sub { display: inline-block; background: var(--dark); color: var(--yellow); font-size: 12px; font-weight: 900; padding: 6px 18px; border-radius: 8px; margin-top: 8px; letter-spacing: 1px; }
+  .card-wrap { position: relative; z-index: 1; width: 100%; max-width: 680px; padding: 0 16px; margin: 20px auto 0; }
+  .card { background: var(--white); border: 4px solid var(--dark); border-radius: 20px; box-shadow: 6px 6px 0 var(--dark); padding: 24px; position: relative; overflow: hidden; }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: repeating-linear-gradient(90deg, var(--pink) 0, var(--pink) 20px, var(--yellow) 20px, var(--yellow) 40px, var(--green) 40px, var(--green) 60px, var(--blue) 60px, var(--blue) 80px);
+  }
+  .section-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #555; margin-bottom: 8px; display: block; }
+  .input-group { margin-bottom: 20px; }
+  input[type="text"] {
+    width: 100%; background: var(--yellow); border: 3px solid var(--dark); border-radius: 12px; padding: 14px 18px;
+    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; color: var(--dark); outline: none; box-shadow: 3px 3px 0 var(--dark); transition: transform 0.1s, box-shadow 0.1s;
+  }
+  input[type="text"]:focus { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--dark); }
+  input[type="text"]::placeholder { color: #888; font-weight: 700; }
+  .options-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .color-box {
+    display: flex; align-items: center; gap: 10px; background: #f5f5f5; border: 3px solid var(--dark); border-radius: 12px;
+    padding: 10px 14px; cursor: pointer; box-shadow: 3px 3px 0 var(--dark); transition: transform 0.1s, box-shadow 0.1s; position: relative;
+  }
+  .color-box:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--dark); }
+  .color-swatch { width: 28px; height: 28px; border-radius: 8px; border: 3px solid var(--dark); flex-shrink: 0; }
+  .color-val { font-size: 13px; font-weight: 900; color: var(--dark); font-family: 'Nunito', sans-serif; }
+  input[type="color"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: none; }
+  .size-box { display: flex; align-items: center; gap: 12px; background: #f5f5f5; border: 3px solid var(--dark); border-radius: 12px; padding: 12px 14px; box-shadow: 3px 3px 0 var(--dark); margin-bottom: 20px; }
+  input[type="range"] { flex: 1; -webkit-appearance: none; height: 6px; background: var(--dark); border-radius: 99px; outline: none; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--pink); border: 3px solid var(--dark); cursor: pointer; box-shadow: 2px 2px 0 var(--dark); }
+  .size-val { font-family: 'Bangers', cursive; font-size: 20px; letter-spacing: 1px; color: var(--dark); min-width: 52px; text-align: right; }
+  .btn-generate {
+    width: 100%; padding: 16px; background: var(--pink); border: 4px solid var(--dark); border-radius: 14px; color: var(--white);
+    font-family: 'Bangers', cursive; font-size: 22px; letter-spacing: 3px; cursor: pointer; box-shadow: 5px 5px 0 var(--dark); transition: transform 0.1s, box-shadow 0.1s; text-transform: uppercase;
+  }
+  .btn-generate:hover { transform: translate(-3px,-3px); box-shadow: 8px 8px 0 var(--dark); }
+  .error-msg { display: none; margin-top: 8px; font-size: 13px; font-weight: 900; color: var(--pink); letter-spacing: 1px; }
+  .error-msg.show { display: block; }
+  .result-wrap { position: relative; z-index: 1; width: 100%; max-width: 680px; padding: 0 16px; margin: 16px auto 0; display: none; }
+  .result-wrap.show { display: block; }
+  .result-card { background: var(--dark); border: 4px solid var(--dark); border-radius: 20px; box-shadow: 6px 6px 0 rgba(0,0,0,0.3); padding: 24px; text-align: center; position: relative; overflow: hidden; }
+  .result-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: repeating-linear-gradient(90deg, var(--green) 0, var(--green) 20px, var(--blue) 20px, var(--blue) 40px, var(--pink) 40px, var(--pink) 60px, var(--yellow) 60px, var(--yellow) 80px);
+  }
+  .result-title { font-family: 'Bangers', cursive; font-size: 24px; letter-spacing: 3px; color: var(--yellow); text-shadow: 3px 3px 0 var(--orange); margin-bottom: 20px; }
+  .qr-frame { display: inline-block; background: var(--white); border: 6px solid var(--white); border-radius: 16px; box-shadow: 0 0 0 4px var(--yellow), 0 0 0 8px var(--dark); margin-bottom: 20px; }
+  #qrcode canvas, #qrcode img { display: block; border-radius: 6px; }
+  .result-url { font-size: 12px; font-weight: 800; color: rgba(255,255,255,0.5); margin-bottom: 20px; word-break: break-all; letter-spacing: 1px; }
+  .result-url span { color: var(--green); }
+  .dl-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn-dl {
+    padding: 12px; border-radius: 12px; border: 3px solid var(--white); background: transparent; color: var(--white); font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 900; cursor: pointer; letter-spacing: 1px; box-shadow: 3px 3px 0 rgba(255,255,255,0.2); transition: transform 0.1s, box-shadow 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-dl:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 rgba(255,255,255,0.2); }
+  .btn-dl:nth-child(1):hover { background: var(--green); border-color: var(--green); color: var(--dark); }
+  .btn-dl:nth-child(2):hover { background: var(--blue); border-color: var(--blue); color: var(--dark); }
+  .footer { position: relative; z-index: 1; text-align: center; padding: 20px 16px; font-size: 12px; font-weight: 900; color: var(--dark); letter-spacing: 1px; text-transform: uppercase; }
+  @media(max-width:480px){ .options-row { grid-template-columns: 1fr 1fr; } .dl-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">MY<span>LINK</span></div>
+  <a class="nav-link" href="jembatan.html">🔗 JEMBATAN</a>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">✦ FREE TOOL ✦</div>
+  <h1>
+    <span class="l1">BUAT QR</span>
+    <span class="l2">CODE-MU!</span>
+  </h1>
+  <div class="hero-sub">⚡ Gratis · Cepat · Aesthetic · No ribet ⚡</div>
+</div>
+
+<div class="card-wrap">
+  <div class="card">
+    <div class="input-group">
+      <span class="section-label">📎 URL atau Teks</span>
+      <input type="text" id="urlInput" placeholder="https://contoh.com atau teks bebas..." />
+      <div class="error-msg" id="errorMsg">⚠ Isi URL atau teks dulu bro!</div>
+    </div>
+
+    <div class="options-row">
+      <div class="opt-group">
+        <span class="section-label">🎨 Warna QR</span>
+        <div class="color-box">
+          <div class="color-swatch" id="fgSwatch" style="background:#000000"></div>
+          <span class="color-val" id="fgLabel">#000000</span>
+          <input type="color" id="fgColor" value="#000000">
+        </div>
+      </div>
+      <div class="opt-group">
+        <span class="section-label">🖼 Warna Latar</span>
+        <div class="color-box">
+          <div class="color-swatch" id="bgSwatch" style="background:#ffffff"></div>
+          <span class="color-val" id="bgLabel">#ffffff</span>
+          <input type="color" id="bgColor" value="#ffffff">
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <span class="section-label">📐 Ukuran</span>
+      <div class="size-box">
+        <input type="range" id="sizeRange" min="128" max="400" value="200" step="8">
+        <span class="size-val" id="sizeVal">200px</span>
+      </div>
+    </div>
+
+    <button class="btn-generate" onclick="generateQR()">⚡ GENERATE QR CODE ⚡</button>
+  </div>
+</div>
+
+<div class="result-wrap" id="resultWrap">
+  <div class="result-card">
+    <div class="result-title">✦ QR CODE SIAP! ✦</div>
+    <div class="qr-frame">
+      <div id="qrcode"></div>
+    </div>
+    <div class="result-url">QR untuk: <span id="destDisplay"></span></div>
+    <div class="dl-row">
+      <button class="btn-dl" onclick="downloadPNG()">⬇ DOWNLOAD PNG</button>
+      <button class="btn-dl" onclick="copyURL()">📋 SALIN URL</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">⚡ 100% gratis · No data tersimpan · Dibuat dengan ❤ ⚡</div>
+
+<script>
+  document.getElementById('fgColor').addEventListener('input', function() {
+    document.getElementById('fgSwatch').style.background = this.value;
+    document.getElementById('fgLabel').textContent = this.value;
+  });
+  document.getElementById('bgColor').addEventListener('input', function() {
+    document.getElementById('bgSwatch').style.background = this.value;
+    document.getElementById('bgLabel').textContent = this.value;
+  });
+  document.getElementById('sizeRange').addEventListener('input', function() {
+    document.getElementById('sizeVal').textContent = this.value + 'px';
+  });
+  document.getElementById('urlInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') generateQR();
+  });
+
+  function generateQR() {
+    const url = document.getElementById('urlInput').value.trim();
+    const errEl = document.getElementById('errorMsg');
+
+    if (!url) {
+      errEl.classList.add('show');
+      document.getElementById('urlInput').focus();
+      return;
+    }
+    errEl.classList.remove('show');
+
+    const size = parseInt(document.getElementById('sizeRange').value);
+    const fg = document.getElementById('fgColor').value;
+    const bg = document.getElementById('bgColor').value;
+    const qrDiv = document.getElementById('qrcode');
+    qrDiv.innerHTML = '';
+
+    // ==========================================
+    // LOGIKA AUTO-LINK JEMBATAN IKLAN (PENTING!)
+    // ==========================================
+    // Sistem otomatis mendeteksi domain GitHub Pages kamu saat online
+    const domainUtama = window.location.origin + window.location.pathname.replace('index.html', '');
+    const linkBungkusIklan = domainUtama + "jembatan.html?to=" + encodeURIComponent(url);
+
+    new QRCode(qrDiv, {
+      text: linkBungkusIklan, // QR akan berisi link iklan kamu dulu!
+      width: size,
+      height: size,
+      colorDark: fg,
+      colorLight: bg,
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
+    const disp = url.length > 45 ? url.slice(0, 42) + '...' : url;
+    document.getElementById('destDisplay').textContent = disp;
+
+    const wrap = document.getElementById('resultWrap');
+    wrap.classList.add('show');
+  }
+
+  function downloadPNG() {
+    const canvas = document.querySelector('#qrcode canvas');
+    if (!canvas) { alert('Generate QR dulu!'); return; }
+    const url = document.getElementById('urlInput').value.trim();
+    const slug = url.replace(/[^a-zA-Z0-9]/g, '-').slice(0, 30) || 'qrcode';
+    const link = document.createElement('a');
+    link.download = `qr-${slug}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
+
+  function copyURL() {
+    const canvas = document.querySelector('#qrcode canvas');
+    if (!canvas) { alert('Generate QR dulu!'); return; }
+    // Untuk menyalin URL versi yang sudah terbungkus jembatan iklan
+    const url = document.getElementById('urlInput').value.trim();
+    const domainUtama = window.location.origin + window.location.pathname.replace('index.html', '');
+    const linkBungkusIklan = domainUtama + "jembatan.html?to=" + encodeURIComponent(url);
+    
+    navigator.clipboard.writeText(linkBungkusIklan).then(() => {
+      const btn = document.querySelectorAll('.btn-dl')[1];
+      const orig = btn.textContent;
+      btn.textContent = '✅ TERSALIN!';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
