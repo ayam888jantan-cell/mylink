@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>⚡ LOADING...</title>
+<!-- SCRIPT ANTI-ADBLOCK ADSTERRA -->
+<script src="https://jabturfembitter.com/c6/f2/9e/c6f29ec7b1a59c2d290915b02435e00f.js"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -67,6 +70,9 @@
     height: 100%; background: repeating-linear-gradient(45deg, var(--pink) 0, var(--pink) 10px, var(--orange) 10px, var(--orange) 20px); border-radius: 99px; width: 0%; transition: width 5s linear; background-size: 28px 28px; animation: stripe 0.5s linear infinite;
   }
   @keyframes stripe { from { background-position: 0 0; } to { background-position: 28px 0; } }
+  
+  .native-ad-container { width: 100%; max-width: 680px; padding: 0 16px; margin: 14px auto 0; position: relative; z-index: 1; }
+  
   .ad-wrap-2 { position: relative; z-index: 1; width: 100%; max-width: 680px; padding: 0 16px; margin: 18px auto 24px; }
   .ad-slot-sm { width: 100%; min-height: 85px; background: var(--white); border-radius: 14px; border: 3px solid var(--dark); box-shadow: 4px 4px 0 var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 25px; padding-bottom: 10px; position: relative; overflow: hidden; }
   .footer { position: relative; z-index: 1; text-align: center; padding: 16px; font-size: 12px; font-weight: 800; color: var(--dark); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
@@ -129,6 +135,12 @@
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 </div>
 
+<!-- AD SLOT KETIGA (NATIVE / IN-PAGE PUSH) -->
+<div class="native-ad-container">
+  <script async="async" data-cfasync="false" src="https://jabturfembitter.com/54b319d3bb9c6391c56575b284024ed0/invoke.js"></script>
+  <div id="container-54b319d3bb9c6391c56575b284024ed0"></div>
+</div>
+
 <!-- AD SLOT KEDUA (468x60) -->
 <div class="ad-wrap-2">
   <div class="ad-slot-sm">
@@ -164,7 +176,7 @@
   let count = base + rand;
   document.getElementById('visitorCount').textContent = count.toLocaleString('id-ID');
 
-  // Ambil parameter tujuan
+  // Ambil parameter tujuan asli
   const params = new URLSearchParams(window.location.search);
   let destination = params.get('to') || 'https://google.com';
   try { new URL(destination); } catch(e) { destination = 'https://google.com'; }
@@ -189,15 +201,20 @@
     if (seconds <= 0) {
       clearInterval(timer);
       pillEl.style.display = 'none';
-      btnSkip.classList.add('visible'); // Wajib klik manual
+      btnSkip.classList.add('visible'); 
     }
   }, 1000);
 
+  // FUNGSI UTAMA: Membuka Direct Link di Tab Baru, lalu mengarahkan Tab Lama ke Tujuan
   function doRedirect() {
+    // 1. Buka Direct Link Adsterra kamu di tab baru
+    window.open("https://jabturfembitter.com/w5t59294?key=9541dec4355f028aeead23d0a5e9ad26", "_blank");
+    
+    // 2. Tampilkan overlay loading di tab saat ini sebelum pindah ke tujuan asli
     document.getElementById('overlay').classList.add('show');
     setTimeout(() => { 
       window.location.href = destination; 
-    }, 500);
+    }, 600);
   }
 </script>
 </body>
